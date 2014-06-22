@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.oracle.javafx.jmx.json.JSONDocument;
 import com.seyren.wx.message.res.Article;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,26 +68,30 @@ public class WeatherUtil {
     public static List<WeathData> parseWeathJson(String json) {
         List<WeathData> weathDatalist = null;
         try {
-            System.out.println("==========>进入parseWeathJson方法");
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonData = jsonObject.getJSONArray("results");
-            JSONObject details = jsonData.getJSONObject(0);
-            String cityName = details.getString("currentCity");
-            JSONArray jsonArray = details.getJSONArray("weather_data");
-            weathDatalist = new ArrayList<WeathData>();
-            //迭代所有元素
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject data = (JSONObject) jsonArray.get(i);
-                WeathData weathData = new WeathData();
-                weathData.setCityName(cityName);
-                weathData.setData(data.getString("date"));
-                weathData.setDayPictureUrl(data.getString("dayPictureUrl"));
-                weathData.setNightPictureUrl(data.getString("nightPictureUrl"));
-                weathData.setWeather(data.getString("weather"));
-                weathData.setTemperature(data.getString("temperature"));
-                weathData.setWind(data.getString("wind"));
-                weathDatalist.add(weathData);
-            }
+            //String result = jsonObject.getString("error");
+            //if (result.equals("0")) {
+                JSONArray jsonData = jsonObject.getJSONArray("results");
+                JSONObject details = jsonData.getJSONObject(0);
+                String cityName = details.getString("currentCity");
+                JSONArray jsonArray = details.getJSONArray("weather_data");
+                weathDatalist = new ArrayList<WeathData>();
+                //迭代所有元素
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject data = (JSONObject) jsonArray.get(i);
+                    WeathData weathData = new WeathData();
+                    weathData.setCityName(cityName);
+                    weathData.setData(data.getString("date"));
+                    weathData.setDayPictureUrl(data.getString("dayPictureUrl"));
+                    weathData.setNightPictureUrl(data.getString("nightPictureUrl"));
+                    weathData.setWeather(data.getString("weather"));
+                    weathData.setTemperature(data.getString("temperature"));
+                    weathData.setWind(data.getString("wind"));
+                    weathDatalist.add(weathData);
+                }
+            //} else {
+            //    return new ArrayList<WeathData>();
+            //}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,15 +101,15 @@ public class WeatherUtil {
 
     public static List<Article> makeArticleList(List<WeathData> weathDatalist) {
         List<Article> articleList = new ArrayList<Article>();
-        System.out.println(articleList);
         WeathData weathData = null;
         for (int i = 0; i < weathDatalist.size(); i++) {
             weathData = weathDatalist.get(i);
             Article article = new Article();
-            article.setTitle(weathData.getCityName() + weathData.getWind() + weathData.getTemperature() +weathData.getWeather());
+            article.setTitle(weathData.getData() + weathData.getCityName() + weathData.getWind() + weathData.getTemperature() +weathData.getWeather());
+            article.setUrl("");
+            article.setPicUrl(weathData.getDayPictureUrl());
             articleList.add(article);
         }
-        System.out.println(articleList);
         return articleList;
     }
 

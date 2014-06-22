@@ -28,18 +28,18 @@ public class CoreServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-//        String signature = request.getParameter("signature");
+        String signature = request.getParameter("signature");
 ////       时间戳
-//        String timestamp = request.getParameter("timestamp");
+        String timestamp = request.getParameter("timestamp");
 ////      随机数
-//        String nonce = request.getParameter("nonce");
+        String nonce = request.getParameter("nonce");
 
         PrintWriter out = response.getWriter();
 
-//        if (SignUtil.checkSignature(signature, timestamp, nonce)) {
+        if (SignUtil.checkSignature(signature, timestamp, nonce)) {
             String respXml = CoreService.processRequest(request);
             out.print(respXml);
-//        }
+        }
         out.close();
         out = null;
 

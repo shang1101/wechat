@@ -145,7 +145,7 @@ public class MessageUtil {
 
     public static String messageToXml(ArticleMessage articleMessage) {
         xstream.alias("xml", articleMessage.getClass());
-        System.out.println(xstream.toXML(articleMessage));
+        xstream.alias("item", new Article().getClass());
         return xstream.toXML(articleMessage);
     }
 
